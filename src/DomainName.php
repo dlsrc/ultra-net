@@ -22,11 +22,17 @@ readonly final class DomainName {
 	 */
 	public string $ip;
 
+	/**
+	 * Флаг валидного домена
+	 */
+	public bool $valid;
+
 	public function __construct(string $domain) {
 		if (!filter_var($domain, \FILTER_VALIDATE_DOMAIN, 	\FILTER_FLAG_HOSTNAME)) {
 			$this->status = DomainStatus::InvalidDomainName;
 			$this->domain = '';
 			$this->ip     = '0.0.0.0';
+			$this->valid  = false;
 			return;
 		}
 
@@ -36,10 +42,19 @@ readonly final class DomainName {
 		if ($this->domain == $ip) {
 			$this->status = DomainStatus::DomainNotExists;
 			$this->ip     = '0.0.0.0';
+			$this->valid  = false;
 			return;
 		}
 
 		$this->status = DomainStatus::Ok;
-		$this->ip = $ip;
+		$this->ip     = $ip;
+		$this->valid  = true;
+	}
+
+	/**
+	 * Проверить наличие DNS записи
+	 */
+	public function isDnsRecord(string $type): bool {
+		return $this->valid ? checkdnsrr($this->domain, $type) : false;
 	}
 }
