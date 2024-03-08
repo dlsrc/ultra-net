@@ -257,7 +257,7 @@ class Mailer {
 			return false;
 		}
 
-		if ('' == $this->to && (!$this->cc_as_to || '' == $this->header['Cc'])) {
+		if ('' == $this->to && (!$this->cc_as_to || '' == $this->headers['Cc'])) {
 			return false;
 		}
 
@@ -304,8 +304,8 @@ class Mailer {
 		}
 
 		if ($ereg) {
-			if (!mail($this->to->email, $subject, $message, $this->getHeaders())) {
-				Error::log(Error::message('e_sendmail', $subject, $this->to->email), Status::User);
+			if (!mail($this->to, $subject, $message, $this->getHeaders())) {
+				Error::log('Email to '.$this->to.' was not sent.', Status::User);
 				return false;
 			}
 			else {
@@ -313,7 +313,7 @@ class Mailer {
 			}
 		}
 		else {
-			return mb_send_mail($this->to->email, $subject, $message, $this->getHeaders());
+			return mb_send_mail($this->to, $subject, $message, $this->getHeaders());
 		}
 	}
 
