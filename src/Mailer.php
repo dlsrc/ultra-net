@@ -198,7 +198,7 @@ class Mailer {
 	* Проверка написания почтового адреса
 	*/
 	public static function isEmail(string $mail): bool {
-		return (new EmailAddress($mail))->valid;
+		return new EmailAddress($mail)->valid;
 	}
 
 	/*
@@ -228,7 +228,7 @@ class Mailer {
 	}
 
 	public static function isAddress(string $mail): int {
-		return match((new EmailAddress($mail))->status) {
+		return match(new EmailAddress($mail)->status) {
 			EmailStatus::InvalidDomainName  => 1,
 			EmailStatus::MXRecordMissing    => 2,
 			EmailStatus::InvalidEmailString => 3,
