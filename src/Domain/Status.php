@@ -4,9 +4,9 @@
  * This source code is part of the Ultra net package.
  * Please see the LICENSE file for copyright and licensing information.
  */
-namespace Ultra\Net;
+namespace Ultra\Net\Domain;
 
-enum DomainStatus {
+enum Status {
 	/**
 	 * Строка является абсолютно валидным именем домена.
 	 * DNS запись о домене существует.

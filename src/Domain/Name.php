@@ -4,13 +4,13 @@
  * This source code is part of the Ultra net package.
  * Please see the LICENSE file for copyright and licensing information.
  */
-namespace Ultra\Net;
+namespace Ultra\Net\Domain;
 
-readonly final class DomainName {
+readonly final class Name {
 	/**
 	 * Статус адреса
 	 */
-	public DomainStatus $status;
+	public Status $status;
 
 	/**
 	 * Строка доменного имени
@@ -29,7 +29,7 @@ readonly final class DomainName {
 
 	public function __construct(string $domain) {
 		if (!filter_var($domain, \FILTER_VALIDATE_DOMAIN, 	\FILTER_FLAG_HOSTNAME)) {
-			$this->status = DomainStatus::InvalidDomainName;
+			$this->status = Status::InvalidDomainName;
 			$this->domain = '';
 			$this->ip     = '0.0.0.0';
 			$this->valid  = false;
@@ -40,13 +40,13 @@ readonly final class DomainName {
 		$ip = gethostbyname($this->domain);
 
 		if ($this->domain == $ip) {
-			$this->status = DomainStatus::DomainNotExists;
+			$this->status = Status::DomainNotExists;
 			$this->ip     = '0.0.0.0';
 			$this->valid  = false;
 			return;
 		}
 
-		$this->status = DomainStatus::Ok;
+		$this->status = Status::Ok;
 		$this->ip     = $ip;
 		$this->valid  = true;
 	}

@@ -4,13 +4,13 @@
  * This source code is part of the Ultra net package.
  * Please see the LICENSE file for copyright and licensing information.
  */
-namespace Ultra\Net;
+namespace Ultra\Net\Email;
 
-readonly final class EmailAddress {
+readonly final class Address {
 	/**
 	 * Статус адреса
 	 */
-	public EmailStatus $status;
+	public Status $status;
 
 	/**
 	 * Строка адреса поступившая в качестве аргумента при создании объекта.
@@ -41,11 +41,11 @@ readonly final class EmailAddress {
 
 	public function __construct(string $email, bool $unicode = false) {
 		$this->raw = $email;
-		$email = filter_var($email, \FILTER_SANITIZE_EMAIL);
+		$email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
-		if (!filter_var($email, \FILTER_VALIDATE_EMAIL)) {
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 			$this->email  = '';
-			$this->status = EmailStatus::InvalidEmailString;
+			$this->status = Status::InvalidEmailString;
 			$this->valid  = false;
 			$this->domain = '';
 			$this->ip     = '0.0.0.0';
@@ -58,7 +58,7 @@ readonly final class EmailAddress {
 		$ip = gethostbyname($this->domain);
 
 		if ($this->domain == $ip) {
-			$this->status = EmailStatus::InvalidDomainName;
+			$this->status = Status::InvalidDomainName;
 			$this->valid  = false;
 			$this->ip     = '0.0.0.0';
 			return;
@@ -67,16 +67,16 @@ readonly final class EmailAddress {
 		$this->ip = $ip;
 
 		if (!checkdnsrr($this->domain, 'MX')) {
-			$this->status = EmailStatus::MXRecordMissing;
+			$this->status = Status::MXRecordMissing;
 			$this->valid  = false;
 			return;
 		}
 
 		if ($this->raw == $this->email) {
-			$this->status = EmailStatus::Ok;
+			$this->status = Status::Ok;
 		}
 		else {
-			$this->status = EmailStatus::OkButRaw;
+			$this->status = Status::OkButRaw;
 		}
 
 		$this->valid = true;

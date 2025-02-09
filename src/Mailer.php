@@ -8,6 +8,10 @@ namespace Ultra\Net;
 
 use Ultra\Error;
 use Ultra\Status;
+use Ultra\Net\Domain\Name;
+use Ultra\Net\Domain\Status as Domain;
+use Ultra\Net\Email\Address;
+use Ultra\Net\Email\Status as Email;
 
 class Mailer {
 	public const string EOL   = "\r\n";
@@ -159,7 +163,7 @@ class Mailer {
 		}
 
 		foreach ($addrs as $key => $val) {
-			$addr = new EmailAddress($val);
+			$addr = new Address($val);
 
 			if (!$addr->valid) {
 				$this->summary[$header][] = $addr;
@@ -198,7 +202,7 @@ class Mailer {
 	* Проверка написания почтового адреса
 	*/
 	public static function isEmail(string $mail): bool {
-		return (new EmailAddress($mail))->valid;
+		return new Address($mail)->valid;
 	}
 
 	/*
@@ -219,19 +223,19 @@ class Mailer {
 	* Проверка существования почтового сервера
 	*/
 	public static function isServer(string $str): int {
-		$domain = new DomainName($str);
+		$domain = new Name($str);
 
 		return match($domain->status) {
-			DomainStatus::Ok => $domain->isDnsRecord('MX') ? 0 : 2,
-			DomainStatus::InvalidDomainName, DomainStatus::DomainNotExists => 1,
+			Domain::Ok => $domain->isDnsRecord('MX') ? 0 : 2,
+			Domain::InvalidDomainName, Domain::DomainNotExists => 1,
 		};
 	}
 
 	public static function isAddress(string $mail): int {
-		return match((new EmailAddress($mail))->status) {
-			EmailStatus::InvalidDomainName  => 1,
-			EmailStatus::MXRecordMissing    => 2,
-			EmailStatus::InvalidEmailString => 3,
+		return match(new Address($mail)->status) {
+			Email::InvalidDomainName  => 1,
+			Email::MXRecordMissing    => 2,
+			Email::InvalidEmailString => 3,
 			default                         => 0,
 		};
 	}

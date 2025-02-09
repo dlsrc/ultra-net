@@ -4,9 +4,9 @@
  * This source code is part of the Ultra net package.
  * Please see the LICENSE file for copyright and licensing information.
  */
-namespace Ultra\Net;
+namespace Ultra\Net\Email;
 
-enum EmailStatus {
+enum Status {
 	/**
 	 * Строка является абсолютно валидным адресом электронной почты.
 	 * DNS запись о почтовом сервере существует.
